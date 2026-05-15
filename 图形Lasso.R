@@ -57,9 +57,9 @@ gl_last <- glasso(cov_last, rho = lambda, maxit = maxit, thr = thr)
 prec_last <- gl_last$wi
 
 # 保存结果
-write.csv(reg_weights, "C:/Users/27438/Desktop/图形Lasso/reg_weights_100.csv", row.names = FALSE)
-write.csv(data.frame(cond = cond_vals), "C:/Users/27438/Desktop/图形Lasso/reg_cond_100.csv", row.names = FALSE)
-write.csv(prec_last, "C:/Users/27438/Desktop/图形Lasso/prec_last_100.csv", row.names = FALSE)
+write.csv(reg_weights, "C:/Users/27438/Desktop/图形Lasso/reg_weights_2436.csv", row.names = FALSE)
+write.csv(data.frame(cond = cond_vals), "C:/Users/27438/Desktop/图形Lasso/reg_cond_2436.csv", row.names = FALSE)
+write.csv(prec_last, "C:/Users/27438/Desktop/图形Lasso/prec_last_100.normal", row.names = FALSE)
 
 cat("全量结果已保存至","\n")
 
