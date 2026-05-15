@@ -197,65 +197,65 @@ print(f"最小值: {filtered_cond.min():.2f}, 最大值: {filtered_cond.max():.2
 print(f"中位数: {np.median(filtered_cond):.2f}")
 
 
-# # ==================== 原始条件数（剔除后样本）与正则化后对比（两个子图） ====================
-# print("\n正在计算剔除后样本的原始协方差矩阵条件数（串行，避免多进程错误）...")
-# DATA_DIR_MIN = r"C:\Users\27438\Desktop\大创\1min"
-# files = [os.path.join(DATA_DIR_MIN, f) for f in os.listdir(DATA_DIR_MIN) if f.endswith('_1min_log_return.RData')]
-# files.sort()
-#
-# # 获取剔除后样本的原始索引
-# normal_indices = np.where(mask)[0]
-#
-# orig_cond_filtered = []
-# total = len(normal_indices)
-# for i, idx in enumerate(normal_indices):
-#     if i % 200 == 0:
-#         print(f"  进度: {i}/{total}")
-#     result = pyreadr.read_r(files[idx])
-#     df = list(result.values())[0]
-#     returns = df.T.values
-#     cov = returns.T @ returns
-#     orig_cond_filtered.append(np.linalg.cond(cov))
-# orig_cond_filtered = np.array(orig_cond_filtered)
-#
-# print(f"原始条件数（剔除后样本）均值: {np.mean(orig_cond_filtered):.2e}")
-# print(f"原始条件数（剔除后样本）中位数: {np.median(orig_cond_filtered):.2e}")
-#
-# # 核密度估计
-# from scipy.stats import gaussian_kde
-# log_orig = np.log10(orig_cond_filtered)
-# log_reg = np.log10(filtered_cond)
-#
-# kde_orig = gaussian_kde(log_orig)
-# kde_reg = gaussian_kde(log_reg)
-#
-# # 定义绘图范围（各自使用数据的 min/max，也可统一范围）
-# x_orig = np.linspace(log_orig.min(), log_orig.max(), 200)
-# x_reg = np.linspace(log_reg.min(), log_reg.max(), 200)
-#
-# # 创建两个子图（左右并排）
-# fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-#
-# # 左图：原始条件数
-# ax1.plot(x_orig, kde_orig(x_orig), 'r-', linewidth=2)
-# ax1.fill_between(x_orig, 0, kde_orig(x_orig), alpha=0.3, color='red')
-# ax1.set_xlabel('log10(条件数)')
-# ax1.set_ylabel('密度')
-# ax1.set_title('原始协方差矩阵条件数')
-# ax1.grid(alpha=0.3, linestyle='--')
-#
-# # 右图：正则化后条件数
-# ax2.plot(x_reg, kde_reg(x_reg), 'b-', linewidth=2)
-# ax2.fill_between(x_reg, 0, kde_reg(x_reg), alpha=0.3, color='blue')
-# ax2.set_xlabel('log10(条件数)')
-# ax2.set_ylabel('密度')
-# ax2.set_title('图形Lasso后条件数')
-# ax2.grid(alpha=0.3, linestyle='--')
-#
-# plt.tight_layout()
-# plt.savefig(os.path.join(OUTPUT_DIR, 'cond_kde_comparison_two_panels.png'), dpi=150)
-# plt.close()
-# print("核密度对比图（两个子图）已保存至 cond_kde_comparison_two_panels.png")
+# ==================== 原始条件数（剔除后样本）与正则化后对比（两个子图） ====================
+print("\n正在计算剔除后样本的原始协方差矩阵条件数（串行，避免多进程错误）...")
+DATA_DIR_MIN = r"C:\Users\27438\Desktop\大创\1min"
+files = [os.path.join(DATA_DIR_MIN, f) for f in os.listdir(DATA_DIR_MIN) if f.endswith('_1min_log_return.RData')]
+files.sort()
+
+# 获取剔除后样本的原始索引
+normal_indices = np.where(mask)[0]
+
+orig_cond_filtered = []
+total = len(normal_indices)
+for i, idx in enumerate(normal_indices):
+    if i % 200 == 0:
+        print(f"  进度: {i}/{total}")
+    result = pyreadr.read_r(files[idx])
+    df = list(result.values())[0]
+    returns = df.T.values
+    cov = returns.T @ returns
+    orig_cond_filtered.append(np.linalg.cond(cov))
+orig_cond_filtered = np.array(orig_cond_filtered)
+
+print(f"原始条件数（剔除后样本）均值: {np.mean(orig_cond_filtered):.2e}")
+print(f"原始条件数（剔除后样本）中位数: {np.median(orig_cond_filtered):.2e}")
+
+# 核密度估计
+from scipy.stats import gaussian_kde
+log_orig = np.log10(orig_cond_filtered)
+log_reg = np.log10(filtered_cond)
+
+kde_orig = gaussian_kde(log_orig)
+kde_reg = gaussian_kde(log_reg)
+
+# 定义绘图范围（各自使用数据的 min/max，也可统一范围）
+x_orig = np.linspace(log_orig.min(), log_orig.max(), 200)
+x_reg = np.linspace(log_reg.min(), log_reg.max(), 200)
+
+# 创建两个子图（左右并排）
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+# 左图：原始条件数
+ax1.plot(x_orig, kde_orig(x_orig), 'r-', linewidth=2)
+ax1.fill_between(x_orig, 0, kde_orig(x_orig), alpha=0.3, color='red')
+ax1.set_xlabel('log10(条件数)')
+ax1.set_ylabel('密度')
+ax1.set_title('原始协方差矩阵条件数')
+ax1.grid(alpha=0.3, linestyle='--')
+
+# 右图：正则化后条件数
+ax2.plot(x_reg, kde_reg(x_reg), 'b-', linewidth=2)
+ax2.fill_between(x_reg, 0, kde_reg(x_reg), alpha=0.3, color='blue')
+ax2.set_xlabel('log10(条件数)')
+ax2.set_ylabel('密度')
+ax2.set_title('图形Lasso后条件数')
+ax2.grid(alpha=0.3, linestyle='--')
+
+plt.tight_layout()
+plt.savefig(os.path.join(OUTPUT_DIR, 'cond_kde_comparison_two_panels.png'), dpi=150)
+plt.close()
+print("核密度对比图（两个子图）已保存至 cond_kde_comparison_two_panels.png")
 
 
 # ==================== 7. 资产网络分析 ====================
