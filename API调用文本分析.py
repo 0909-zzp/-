@@ -2,10 +2,15 @@ import os
 from openai import OpenAI
 
 # 初始化客户端（请将 API_KEY 替换为你的真实 Key）
+api_key = os.getenv("DEEPSEEK_API_KEY")
+if not api_key:
+    raise ValueError("请先设置环境变量 DEEPSEEK_API_KEY")
+
 client = OpenAI(
-    api_key="your_api_key",
+    api_key=api_key,
     base_url="https://api.deepseek.com"
 )
+
 model="deepseek-v4-pro"
 #情感分析
 def sentiment_analysis(text: str) -> dict:
